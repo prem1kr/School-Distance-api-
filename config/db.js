@@ -18,12 +18,29 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
+(async () => {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS schools (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        address VARCHAR(255),
+        latitude DECIMAL(10,6),
+        longitude DECIMAL(10,6)
+      )
+    `);
+    console.log("Schools table is ready!");
+  } catch (err) {
+    console.error("❌ Error creating table:", err.message);
+  }
+})();
+
 const testConnection = async () => {
   try {
     const [rows] = await pool.query("SELECT 1 + 1 AS result");
-    console.log("✅ Database connected! Test result:", rows[0].result);
+    console.log(" Database connected! Test result:", rows[0].result);
   } catch (err) {
-    console.error("❌ Database connection failed:", err.message);
+    console.error(" Database connection failed:", err.message);
   }
 };
 
